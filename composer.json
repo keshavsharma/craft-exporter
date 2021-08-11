@@ -1,0 +1,41 @@
+{
+    "name": "keshavsharma/craftexporter",
+    "description": "plugin’s package description",
+    "type": "craft-plugin",
+    "version": "1",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "craftexporter"
+    ],
+    "support": {
+        "docs": "https://github.com/keshavsharma/craftexporter/blob/master/README.md",
+        "issues": "https://github.com/keshavsharma/craftexporter/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Keshav",
+            "homepage": "https://wave2web.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "keshavsharma\\craftexporter\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "craftexporter",
+        "handle": "craftexporter",
+        "developer": "Keshav",
+        "developerUrl": "https://wave2web.com",
+        "documentationUrl": "https://github.com/keshavsharma/craftexporter/blob/master/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/keshavsharma/craftexporter/master/CHANGELOG.md",
+        "class": "keshavsharma\\craftexporter\\Craftexporter"
+    }
+}
