@@ -78,6 +78,7 @@ class Customexporter extends ElementExporter
             }
             $modDataObj = ['title' => $elementArr['title'] , 'status' => $elementArr['status'], 'url' => $elementArr['url']];
             foreach ($fields as $fieldSlug) {
+                if(!empty( $fieldSlug ) && isset($elementArr[$fieldSlug]))
                 $modDataObj[$fieldSlug] = $elementArr[$fieldSlug];
             }
             $data[] = $modDataObj;
