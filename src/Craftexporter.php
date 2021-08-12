@@ -175,51 +175,83 @@ class Craftexporter extends Plugin
         );
         $app =  Craft::$app;
         $segments = Craft::$app->getRequest()->segments;
+        
         if ($app->getRequest()->getIsCpRequest() && count($segments) > 0 && $segments[0] === 'entries') {
-
+            if($app->getRequest()->isAjax ){
+                echo $fieldNamesList;
+                die;
+            }
+             
             $js = <<<EOT
     
             \$(function() {
                 var allAvailFieldsForExport = $fieldNamesList;
                 \$('#export-btn').click( function() {
                     var formSubmit = \$('.export-form .submit');
+                    if($('.field_exprt_fields_list').length != 0) {
+                        \$('.field_exprt_fields_list').html('');
+                    }
                     var limitField = Craft.ui.createTextField({
-                        label: Craft.t('app', 'limitoffset'),
+                        label: Craft.t('app', 'Offset'),
                         placeholder: Craft.t('app', '0'),
                         type: 'number',
                         class: 'offsetCust',
                         min: 0
                     }).insertBefore(formSubmit);
+    
+                    \$('<div class="field field_exprt_fields_list" style=" height: 150px; overflow: auto; "><div class="heading"><label style=" display: block;">Select Fields</label></div> </div>').insertBefore(formSubmit);
+                    
+                    setupCheckboxes(allAvailFieldsForExport);
+                }); 
+                
 
-                    \$('<div class="field field_exprt_fields_list" ><div class="heading"><label >Select Fields</label></div> </div>').insertBefore(formSubmit);
-                    for(var field in allAvailFieldsForExport){
-                        \$('.field_exprt_fields_list').append(Craft.ui.createCheckbox({
-                            label: Craft.escapeHtml(allAvailFieldsForExport[field]),
-                            name: 'export_fields[]',
-                            value: field,
-                            checked: 'checked', 
-                        }));
-                    }
-                    Craft.elementIndex.on('registerViewParams', function(e, p) {
-                        var offset = \$('.offsetCust').val().trim() != '' ? \$('.offsetCust').val() : 0;
-                        var selectedFields = [];
-                        $('[name="export_fields[]"]:checked').each(function(){
-                            selectedFields.push(this.value);
-                        });
-                        selectedFields = selectedFields.length > 0 ? selectedFields.join(',') : '';
-                        var limit = offset + ',' +  selectedFields ;
-                        e.params.paginated = limit;
-                    
-                    
-                        return e;
-                    }); 
+
+                Craft.elementIndex.on('registerViewParams', function(e, p) {
+                    var offset = \$('.offsetCust').val() && \$('.offsetCust').val().trim() != '' ? \$('.offsetCust').val() : 0;
+                    var selectedFields = [];
+                    $('[name="export_fields[]"]:checked').each(function(){
+                        selectedFields.push(this.value);
+                    });
+                    selectedFields = selectedFields.length > 0 ? selectedFields.join(',') : '';
+                    var limit = offset + ',' +  selectedFields ;
+                    e.params.paginated = limit;
+                
+                
+                    return e;
+                }); 
+
+                Craft.elementIndex.on('updateElements', function(e, p) {
+                     
+                     \$.get(window.location.href, function(res){
+                        allAvailFieldsForExport = JSON.parse( res );
+                        \$('.field_exprt_fields_list').html('');
+                        setupCheckboxes(allAvailFieldsForExport);
+                     });
                 }); 
             }); 
         
+            function setupCheckboxes(allAvailFieldsForExport){
+                console.log(allAvailFieldsForExport);
+                for(var field in allAvailFieldsForExport){
+                    \$('.field_exprt_fields_list').append(Craft.ui.createCheckbox({
+                        label: Craft.escapeHtml(allAvailFieldsForExport[field]),
+                        name: 'export_fields[]',
+                        value: field,
+                        checked: 'checked', 
+                    }));
+                }
+            }
             EOT;
 
-
+            $css = <<<EOT
+    
+            .field.field_exprt_fields_list label{
+                display: block;
+            }
+            EOT;
+             
             $app->getView()->registerJs($js);
+            $app->getView()->registerCss($css);
         }
     }
     // Protected Methods

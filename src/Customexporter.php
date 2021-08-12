@@ -25,7 +25,7 @@ class Customexporter extends ElementExporter
 {
     public static function displayName(): string
     {
-        return 'My Custom Exporter';
+        return 'Advanced';
     }
 
     public function export(ElementQueryInterface $query): array
