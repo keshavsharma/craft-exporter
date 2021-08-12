@@ -199,7 +199,7 @@ class Craftexporter extends Plugin
                         min: 0
                     }).insertBefore(formSubmit);
     
-                    \$('<div class="field field_exprt_fields_list" style=" height: 150px; overflow: auto; "><div class="heading"><label style=" display: block;">Select Fields</label></div> </div>').insertBefore(formSubmit);
+                    \$('<div class="field field_exprt_fields_list" ><div class="heading"><label style=" display: block;">Select Fields</label></div> </div>').insertBefore(formSubmit);
                     
                     setupCheckboxes(allAvailFieldsForExport);
                 }); 
@@ -233,18 +233,23 @@ class Craftexporter extends Plugin
             function setupCheckboxes(allAvailFieldsForExport){
                 console.log(allAvailFieldsForExport);
                 for(var field in allAvailFieldsForExport){
-                    \$('.field_exprt_fields_list').append(Craft.ui.createCheckbox({
-                        label: Craft.escapeHtml(allAvailFieldsForExport[field]),
-                        name: 'export_fields[]',
-                        value: field,
-                        checked: 'checked', 
-                    }));
+                    var htm = '<div class="_chk_field"><label >'+ Craft.escapeHtml(allAvailFieldsForExport[field])+' <input type="checkbox" value="'+ field +'" class="checkbox_exp" name="export_fields[]" checked="checked"></label></div>';
+                    $('.field_exprt_fields_list').append(htm);
+                    
                 }
             }
             EOT;
 
             $css = <<<EOT
-    
+            .field_exprt_fields_list {
+                max-height: 200px; 
+                overflow: auto; 
+            }
+            .field.field_exprt_fields_list input{
+                float: left;
+                margin: 4px 5px 0;
+            }
+            
             .field.field_exprt_fields_list label{
                 display: block;
             }
