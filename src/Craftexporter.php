@@ -126,19 +126,21 @@ class Craftexporter extends Plugin
         }
 
 
-
-
-        $qry = Entry::find()->sectionId(ArrayHelper::getColumn($filteredSections, 'id'));
-
-        $anyEntry = $qry->one();
         $fieldNamesList = [];
-        if (!empty($anyEntry)) {
-            $fields = $anyEntry->getFieldLayout()->getFields();
 
-            foreach ($fields as $field) {
-                $fieldNamesList[$field->handle] = $field->name;
+        if(!empty($filteredSections)) {
+            $qry = Entry::find()->sectionId(ArrayHelper::getColumn($filteredSections, 'id'));
+
+            $anyEntry = $qry->one();
+            if (!empty($anyEntry)) {
+                $fields = $anyEntry->getFieldLayout()->getFields();
+    
+                foreach ($fields as $field) {
+                    $fieldNamesList[$field->handle] = $field->name;
+                }
             }
         }
+        
         $fieldNamesList = json_encode($fieldNamesList);
         // $section = Craft::$app->sections->getSectionById(1);
         // $qry =  Entry::find()->where('type = :type', array(':type' => "Assets"))->all();
